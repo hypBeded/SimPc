@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SimPc"
+        xmlns:local="clr-namespace:SimPc.Converters"
+        xmlns:models="clr-namespace:SimPc.Models"
         mc:Ignorable="d"
         Title="SimPC - Конфигуратор ПК" Height="750" Width="1300"
         WindowStartupLocation="CenterScreen"
@@ -15,11 +16,19 @@
         <local:InBuildToColorConverter x:Key="InBuildToColorConverter"/>
         <local:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         <local:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
-        
-        
+
+
         <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#252526"/>
         <SolidColorBrush x:Key="BuildPanelBackgroundBrush" Color="#2D2D30"/>
         <SolidColorBrush x:Key="AccentBrush" Color="#007ACC"/>
+        <SolidColorBrush x:Key="MainBackgroundBrush" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F0F0F0"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#AAAAAA"/>
+        <SolidColorBrush x:Key="TextMutedBrush" Color="#CCCCCC"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2D2D30"/>
+        <SolidColorBrush x:Key="CardHoverBackgroundBrush" Color="#3E3E42"/>
+        <SolidColorBrush x:Key="InputBackgroundBrush" Color="#3E3E42"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#3D3D3D"/>
 
         <Style x:Key="MenuItemStyle" TargetType="ListBoxItem">
             <Setter Property="Foreground" Value="#F0F0F0"/>

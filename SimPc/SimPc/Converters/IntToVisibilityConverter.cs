@@ -3,13 +3,14 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace SimPc
+namespace SimPc.Converters
 {
-    public class StringToVisibilityConverter : IValueConverter
+    public class IntToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return string.IsNullOrEmpty(value?.ToString()) ? Visibility.Collapsed : Visibility.Visible;
+            int intValue = (int)value;
+            return intValue > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

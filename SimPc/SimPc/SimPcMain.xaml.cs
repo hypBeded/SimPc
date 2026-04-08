@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Text.Json;
 using System.IO;
 using Microsoft.Win32;
+using SimPc.Converters;
+using SimPc.Models;
 
 namespace SimPc
 {
@@ -267,19 +269,46 @@ namespace SimPc
 
         private void ApplyTheme(string theme)
         {
+            var resources = Application.Current.Resources;
+
             if (theme == "Light")
             {
-                Application.Current.Resources["SidebarBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0));
-                Application.Current.Resources["BuildPanelBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xE0, 0xE0, 0xE0));
-                Application.Current.Resources["AccentBrush"] = new SolidColorBrush(Color.FromRgb(0x00, 0x7A, 0xCC));
-                this.Background = new SolidColorBrush(Color.FromRgb(0xF5, 0xF5, 0xF5));
+                // Светлая тема
+                resources["SidebarBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0));
+                resources["BuildPanelBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xE8, 0xE8, 0xE8));
+                resources["MainBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xF5, 0xF5, 0xF5));
+                resources["TextPrimaryBrush"] = new SolidColorBrush(Color.FromRgb(0x33, 0x33, 0x33));
+                resources["TextSecondaryBrush"] = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66));
+                resources["TextMutedBrush"] = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88));
+                resources["CardBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xFA, 0xFA, 0xFA));
+                resources["CardHoverBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0));
+                resources["InputBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xE8, 0xE8, 0xE8));
+                resources["BorderBrush"] = new SolidColorBrush(Color.FromRgb(0xCC, 0xCC, 0xCC));
+                resources["AccentBrush"] = new SolidColorBrush(Color.FromRgb(0x00, 0x7A, 0xCC));
             }
             else
             {
-                Application.Current.Resources["SidebarBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0x25, 0x25, 0x26));
-                Application.Current.Resources["BuildPanelBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0x2D, 0x2D, 0x30));
-                Application.Current.Resources["AccentBrush"] = new SolidColorBrush(Color.FromRgb(0x00, 0x7A, 0xCC));
-                this.Background = new SolidColorBrush(Color.FromRgb(0x1E, 0x1E, 0x1E));
+                // Тёмная тема
+                resources["SidebarBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0x25, 0x25, 0x26));
+                resources["BuildPanelBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0x2D, 0x2D, 0x30));
+                resources["MainBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0x1E, 0x1E, 0x1E));
+                resources["TextPrimaryBrush"] = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0));
+                resources["TextSecondaryBrush"] = new SolidColorBrush(Color.FromRgb(0xAA, 0xAA, 0xAA));
+                resources["TextMutedBrush"] = new SolidColorBrush(Color.FromRgb(0xCC, 0xCC, 0xCC));
+                resources["CardBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0x2D, 0x2D, 0x30));
+                resources["CardHoverBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0x3E, 0x3E, 0x42));
+                resources["InputBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0x3E, 0x3E, 0x42));
+                resources["BorderBrush"] = new SolidColorBrush(Color.FromRgb(0x3D, 0x3D, 0x3D));
+                resources["AccentBrush"] = new SolidColorBrush(Color.FromRgb(0x00, 0x7A, 0xCC));
+            }
+
+            // Обновляем фон окна
+            this.Background = (Brush)resources["MainBackgroundBrush"];
+
+            // Обновляем цвета для CheckBox в панели производителей
+            foreach (CheckBox checkBox in ManufacturersPanel.Children)
+            {
+                checkBox.Foreground = (Brush)resources["TextPrimaryBrush"];
             }
         }
 

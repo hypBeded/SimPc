@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 
-namespace SimPc
+namespace SimPc.Converters
 {
-    public class IntToVisibilityConverter : IValueConverter
+    public class InBuildToTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int intValue = (int)value;
-            return intValue > 0 ? Visibility.Visible : Visibility.Collapsed;
+            return ((bool)value) ? "✓ В сборке" : "+ Добавить";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

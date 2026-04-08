@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace SimPc
+namespace SimPc.Models
 {
     public class Product : INotifyPropertyChanged
     {

@@ -100,10 +100,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BuildItem.cs" />
-    <Compile Include="BuildSaveData.cs" />
-    <Compile Include="IntToVisibilityConverter.cs" />
-    <Compile Include="StringToVisibilityConverter.cs" />
+    <Compile Include="Models\BuildItem.cs" />
+    <Compile Include="Models\BuildSaveData.cs" />
+    <Compile Include="Converters\IntToVisibilityConverter.cs" />
+    <Compile Include="Converters\StringToVisibilityConverter.cs" />
     <Page Include="SimPcMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,9 +113,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppSettings.cs" />
-    <Compile Include="InBuildToColorConverter.cs" />
-    <Compile Include="InBuildToTextConverter.cs" />
-    <Compile Include="Product.cs" />
+    <Compile Include="Converters\InBuildToColorConverter.cs" />
+    <Compile Include="Converters\InBuildToTextConverter.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="SimPcMain.xaml.cs">
       <DependentUpon>SimPcMain.xaml</DependentUpon>
     </Compile>
@@ -147,6 +147,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets" Condition="Exists('..\packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
