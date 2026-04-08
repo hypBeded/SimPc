@@ -100,6 +100,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BuildItem.cs" />
+    <Compile Include="BuildSaveData.cs" />
+    <Compile Include="IntToVisibilityConverter.cs" />
+    <Compile Include="StringToVisibilityConverter.cs" />
     <Page Include="SimPcMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -108,6 +112,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AppSettings.cs" />
+    <Compile Include="InBuildToColorConverter.cs" />
+    <Compile Include="InBuildToTextConverter.cs" />
+    <Compile Include="Product.cs" />
     <Compile Include="SimPcMain.xaml.cs">
       <DependentUpon>SimPcMain.xaml</DependentUpon>
     </Compile>

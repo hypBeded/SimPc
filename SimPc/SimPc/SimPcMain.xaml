@@ -5,15 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimPc"
         mc:Ignorable="d"
-        Title="SimPC" Height="750" Width="1200"
+        Title="SimPC - Конфигуратор ПК" Height="750" Width="1300"
         WindowStartupLocation="CenterScreen"
         Background="#1E1E1E"
         FontFamily="Segoe UI">
 
     <Window.Resources>
+        <local:InBuildToTextConverter x:Key="InBuildToTextConverter"/>
+        <local:InBuildToColorConverter x:Key="InBuildToColorConverter"/>
+        <local:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <local:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+        
+        
         <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#252526"/>
         <SolidColorBrush x:Key="BuildPanelBackgroundBrush" Color="#2D2D30"/>
         <SolidColorBrush x:Key="AccentBrush" Color="#007ACC"/>
+
         <Style x:Key="MenuItemStyle" TargetType="ListBoxItem">
             <Setter Property="Foreground" Value="#F0F0F0"/>
             <Setter Property="Padding" Value="20,10"/>
@@ -37,7 +44,6 @@
             <Setter Property="Foreground" Value="#007ACC"/>
         </Style>
 
-        <!-- Стиль карточки товара -->
         <Style x:Key="ProductCardStyle" TargetType="Border">
             <Setter Property="Background" Value="#2D2D30"/>
             <Setter Property="CornerRadius" Value="8"/>
@@ -56,68 +62,80 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Стиль элемента сборки -->
         <Style x:Key="BuildItemStyle" TargetType="Border">
             <Setter Property="Background" Value="#3E3E42"/>
             <Setter Property="CornerRadius" Value="6"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
-
     </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="280"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="320"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Левая панель - категории и фильтры -->
         <Border Grid.Column="0" Background="{StaticResource SidebarBackgroundBrush}">
-            <StackPanel>
-                <TextBlock Text="КАТЕГОРИИ" Margin="20,20,20,10" FontSize="16" FontWeight="SemiBold" Foreground="#AAAAAA"/>
-                <ListBox x:Name="CategoryListBox" Background="Transparent" BorderThickness="0"
-                         ItemContainerStyle="{StaticResource MenuItemStyle}"
-                         SelectedIndex="0">
-                    <ListBoxItem>Все компоненты</ListBoxItem>
-                    <ListBoxItem>Процессоры</ListBoxItem>
-                    <ListBoxItem>Видеокарты</ListBoxItem>
-                    <ListBoxItem>Материнские платы</ListBoxItem>
-                    <ListBoxItem>Оперативная память</ListBoxItem>
-                    <ListBoxItem>Накопители</ListBoxItem>
-                    <ListBoxItem>Блоки питания</ListBoxItem>
-                    <ListBoxItem>Корпуса</ListBoxItem>
-                </ListBox>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="КАТЕГОРИИ" Margin="20,20,20,10" FontSize="16" FontWeight="SemiBold" Foreground="#AAAAAA"/>
+                    <ListBox x:Name="CategoryListBox" Background="Transparent" BorderThickness="0"
+                             ItemContainerStyle="{StaticResource MenuItemStyle}"
+                             SelectedIndex="0">
+                        <ListBoxItem>Все компоненты</ListBoxItem>
+                        <ListBoxItem>Процессоры</ListBoxItem>
+                        <ListBoxItem>Видеокарты</ListBoxItem>
+                        <ListBoxItem>Материнские платы</ListBoxItem>
+                        <ListBoxItem>Оперативная память</ListBoxItem>
+                        <ListBoxItem>Накопители</ListBoxItem>
+                        <ListBoxItem>Блоки питания</ListBoxItem>
+                        <ListBoxItem>Корпуса</ListBoxItem>
+                    </ListBox>
 
-                <TextBlock Text="ФИЛЬТРЫ" Margin="20,30,20,10" FontSize="16" FontWeight="SemiBold" Foreground="#AAAAAA"/>
+                    <TextBlock Text="ПОИСК" Margin="20,30,20,10" FontSize="16" FontWeight="SemiBold" Foreground="#AAAAAA"/>
+                    <TextBox x:Name="SearchBox" Margin="20,0,20,10" Padding="10" 
+                             Background="#3E3E42" Foreground="White" BorderThickness="0"
+                             FontSize="14" TextChanged="SearchBox_TextChanged">
+                        <TextBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
 
-                <StackPanel Margin="20,0">
-                    <TextBlock Text="Цена, руб." Margin="0,0,0,5" Foreground="#CCCCCC"/>
-                    <Slider x:Name="PriceSlider" Style="{StaticResource SliderStyle}" Value="200000" Maximum="200000"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5">
-                        <TextBlock Text="0" Foreground="#CCCCCC"/>
-                        <TextBlock Text=" - " Foreground="#CCCCCC"/>
-                        <TextBlock Text="{Binding ElementName=PriceSlider, Path=Value, StringFormat={}{0:N0} ₽}" 
-                                   Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/>
+                    <TextBlock Text="ФИЛЬТРЫ" Margin="20,20,20,10" FontSize="16" FontWeight="SemiBold" Foreground="#AAAAAA"/>
+
+                    <StackPanel Margin="20,0">
+                        <TextBlock Text="Цена, руб." Margin="0,0,0,5" Foreground="#CCCCCC"/>
+                        <Slider x:Name="PriceSlider" Style="{StaticResource SliderStyle}" Value="200000" Maximum="200000"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5">
+                            <TextBlock Text="0" Foreground="#CCCCCC"/>
+                            <TextBlock Text=" - " Foreground="#CCCCCC"/>
+                            <TextBlock Text="{Binding ElementName=PriceSlider, Path=Value, StringFormat={}{0:N0} ₽}" 
+                                       Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/>
+                        </StackPanel>
                     </StackPanel>
+
+                    <TextBlock Text="Производители" Margin="20,20,20,5" Foreground="#CCCCCC"/>
+                    <StackPanel x:Name="ManufacturersPanel" Margin="20,0,20,10"/>
+
+                    <Button x:Name="ApplyFiltersButton" Content="Применить фильтры" 
+                            Margin="20,20,20,20" 
+                            Padding="10,8"
+                            Background="{StaticResource AccentBrush}"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            FontWeight="SemiBold"/>
                 </StackPanel>
-
-                <TextBlock Text="Производители" Margin="20,20,20,5" Foreground="#CCCCCC"/>
-                <StackPanel x:Name="ManufacturersPanel" Margin="20,0">
-
-                </StackPanel>
-
-                <Button x:Name="ApplyFiltersButton" Content="Применить фильтры" 
-                        Margin="20,30,20,20" 
-                        Padding="10,8"
-                        Background="{StaticResource AccentBrush}"
-                        Foreground="White"
-                        BorderThickness="0"
-                        Cursor="Hand"/>
-            </StackPanel>
+            </ScrollViewer>
         </Border>
 
-        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Padding="20">
+        <!-- Центральная панель - список товаров -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Padding="20" Background="#1E1E1E">
             <ItemsControl x:Name="ProductsItemsControl">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -126,17 +144,30 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource ProductCardStyle}" Width="240" Height="300">
-                            <StackPanel>
+                        <Border Style="{StaticResource ProductCardStyle}" Width="240" Height="340">
+                            <StackPanel Height="Auto">
                                 <Border Background="#3E3E42" Height="120" CornerRadius="4" Margin="0,0,0,10">
                                     <TextBlock Text="{Binding Icon}" FontSize="48" HorizontalAlignment="Center" 
                                                VerticalAlignment="Center" Foreground="#AAAAAA"/>
                                 </Border>
 
-                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" 
-                                           TextWrapping="Wrap" Margin="0,5"/>
-                                <TextBlock Text="{Binding Description}" Foreground="#AAAAAA" FontSize="12" 
+                                <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" 
+                                           TextWrapping="Wrap" Margin="0,5" MaxHeight="50"/>
+                                <TextBlock Text="{Binding Description}" Foreground="#AAAAAA" FontSize="11" 
                                            TextWrapping="Wrap" Margin="0,2" MaxHeight="40"/>
+
+                                <!-- Характеристики -->
+                                <StackPanel Margin="0,5">
+                                    <TextBlock Text="{Binding Socket, StringFormat='Сокет: {0}'}" 
+                                               FontSize="10" Foreground="#888888" 
+                                               Visibility="{Binding Socket, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                    <TextBlock Text="{Binding RamType, StringFormat='Память: {0}'}" 
+                                               FontSize="10" Foreground="#888888"
+                                               Visibility="{Binding RamType, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                    <TextBlock Text="{Binding PowerConsumption, StringFormat='Мощность: {0}W'}" 
+                                               FontSize="10" Foreground="#888888"
+                                               Visibility="{Binding PowerConsumption, Converter={StaticResource IntToVisibilityConverter}}"/>
+                                </StackPanel>
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
                                             Margin="0,10,0,0">
@@ -144,16 +175,11 @@
                                                Foreground="{StaticResource AccentBrush}" 
                                                FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
                                     <Button x:Name="AddToBuildButton" 
-                                            Content="{Binding IsInBuild}"
+                                            Content="{Binding IsInBuild, Converter={StaticResource InBuildToTextConverter}}"
                                             Margin="10,0,0,0" Padding="8,5"
-                                            Background="{Binding IsInBuild}"
+                                            Background="{Binding IsInBuild, Converter={StaticResource InBuildToColorConverter}}"
                                             Foreground="White" BorderThickness="0" Cursor="Hand"
                                             Click="AddToBuildButton_Click" Tag="{Binding}">
-                                        <Button.Resources>
-                                            <Style TargetType="Border">
-                                                <Setter Property="CornerRadius" Value="4"/>
-                                            </Style>
-                                        </Button.Resources>
                                     </Button>
                                 </StackPanel>
                             </StackPanel>
@@ -163,12 +189,13 @@
             </ItemsControl>
         </ScrollViewer>
 
+        <!-- Правая панель - текущая сборка -->
         <Border Grid.Column="2" Background="{StaticResource BuildPanelBackgroundBrush}" Padding="15">
             <StackPanel>
                 <TextBlock Text="ТЕКУЩАЯ СБОРКА" FontSize="18" FontWeight="SemiBold" 
                            Margin="0,0,0,15" Foreground="#AAAAAA"/>
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="400">
                     <ItemsControl x:Name="BuildItemsControl">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -180,14 +207,14 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{Binding CategoryIcon}" FontSize="20" 
-                                                   Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="0" Text="{Binding CategoryIcon}" FontSize="24" 
+                                                   Margin="0,0,10,0" VerticalAlignment="Center"/>
 
                                         <StackPanel Grid.Column="1" Orientation="Vertical">
                                             <TextBlock Text="{Binding Product.Name}" FontWeight="SemiBold" 
-                                                       TextWrapping="Wrap" FontSize="13"/>
+                                                       TextWrapping="Wrap" FontSize="12"/>
                                             <TextBlock Text="{Binding Product.Price, StringFormat={}{0:N0} ₽}" 
-                                                       Foreground="{StaticResource AccentBrush}" FontSize="12"/>
+                                                       Foreground="{StaticResource AccentBrush}" FontSize="11"/>
                                         </StackPanel>
 
                                         <Button Grid.Column="2" Content="✖" Width="24" Height="24"
@@ -202,6 +229,13 @@
                     </ItemsControl>
                 </ScrollViewer>
 
+                <!-- Блок предупреждений о совместимости -->
+                <Border x:Name="CompatibilityWarningBorder" Margin="0,10,0,0" Background="#3E3E42" 
+                        CornerRadius="5" Padding="10" Visibility="Collapsed">
+                    <TextBlock x:Name="CompatibilityWarningTextBlock" 
+                               Foreground="#FFAA55" TextWrapping="Wrap" FontSize="11"/>
+                </Border>
+
                 <Rectangle Height="1" Fill="#3D3D3D" Margin="0,15"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -212,16 +246,20 @@
                 </StackPanel>
 
                 <WrapPanel Margin="0,20,0,0" HorizontalAlignment="Center">
+                    <Button x:Name="ThemeToggleButton" Content="🌓 Переключить тему" 
+                            Margin="3" Padding="12,8" Background="#2D2D2D" Foreground="White"
+                            BorderThickness="1" BorderBrush="#3D3D3D" Cursor="Hand"
+                            Click="ThemeToggleButton_Click"/>
                     <Button x:Name="SaveBuildButton" Content="💾 Сохранить сборку" 
-                            Margin="5" Padding="15,8" Background="#2D2D2D" Foreground="White"
+                            Margin="3" Padding="12,8" Background="#2D2D2D" Foreground="White"
                             BorderThickness="1" BorderBrush="#3D3D3D" Cursor="Hand"
                             Click="SaveBuildButton_Click"/>
                     <Button x:Name="LoadBuildButton" Content="📂 Загрузить сборку" 
-                            Margin="5" Padding="15,8" Background="#2D2D2D" Foreground="White"
+                            Margin="3" Padding="12,8" Background="#2D2D2D" Foreground="White"
                             BorderThickness="1" BorderBrush="#3D3D3D" Cursor="Hand"
                             Click="LoadBuildButton_Click"/>
                     <Button x:Name="ClearBuildButton" Content="🗑 Очистить" 
-                            Margin="5" Padding="15,8" Background="#2D2D2D" Foreground="#FF5555"
+                            Margin="3" Padding="12,8" Background="#2D2D2D" Foreground="#FF5555"
                             BorderThickness="1" BorderBrush="#FF5555" Cursor="Hand"
                             Click="ClearBuildButton_Click"/>
                 </WrapPanel>
